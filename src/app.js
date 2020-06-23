@@ -11,7 +11,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/api', require('./api/index.js'));
 
 app.get('*', (req, res) => {
-  res.status(404).send('You did something wrong!');
+  res.status(404).send('You did something wrong! API endpoint not found.');
 });
 
 const port = config.port || 4000;
