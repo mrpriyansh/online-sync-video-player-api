@@ -45,11 +45,10 @@ router.post(
         if (err) throw err;
         res.json({ token });
       });
+      return res.status(500).send('Unexpected error happened');
     } catch (err) {
-      console.error(err.message);
-      res.status(500).send('Server error');
+      return res.status(500).send('Server error');
     }
-    return true;
   }
 );
 
