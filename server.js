@@ -4,6 +4,8 @@ const connectDB = require('./config/db');
 const app = express();
 connectDB();
 
+app.use(express.json({ extended: false }));
+
 app.get('/', (req, res) => res.send('Server Up and Running'));
 app.use('/login', require('./routes/api/login'));
 app.use('/register', require('./routes/api/register'));
