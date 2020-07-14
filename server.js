@@ -10,4 +10,4 @@ app.use('/register', require('./routes/api/register'));
 app.use('/contact', require('./routes/api/contactUs'));
 
 const PORT = process.env.port || 4000;
-app.listen(PORT);
+app.listen(PORT, () => console.log(`Server is up on port ${PORT}`));
