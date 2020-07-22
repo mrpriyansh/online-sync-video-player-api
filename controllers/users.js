@@ -1,17 +1,14 @@
-const User = require('../../models/User.js');
+const User = require('../models/User.js');
 
 const addUser = (socketId, name, room) => {
   // const existingUser = Users.find((user) => user.name === name && user.room === room)
-
-  // if(existingUser) return(error: What error???????????? )
+  // if(existingUser) return(error: "error")
   const user = User.findOneAndUpdate({ name }, { $set: { socketId, room } }, { new: true });
-
   return user;
 };
 
 const getUser = socketId => {
   const user = User.findOne({ socketId });
-
   return user;
 };
 
