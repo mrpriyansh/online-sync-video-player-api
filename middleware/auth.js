@@ -1,30 +1,29 @@
 const jwt = require('jsonwebtoken');
 const config = require('config');
 
-module.exports = function(req, res, next) {
-  // Get token from header
-  const token = req.header('x-auth-token');
-
-  // Check if not token
-  if (!token) {
-    return res.status(401).json({ msg: 'No token, authorization denied' });
-  }
-
-  // Verify token
+// eslint-disable-next-line consistent-return
+module.exports = (req, res, next) => {
   try {
-    jwt.verify(token, config.get('jwtSecret'), (error, decoded) => {
+    // Get token from header
+    console.log(req.headers.authorization.split(' ').length);
+    if (!req.headers.authorization || req.headers.authorization.split(' ').length <= 1)
+      return res.status(417).json({ msg: 'No token, authorization denied' });
+
+    const token = req.headers.authorization.split(' ')[1];
+    // Check if not token
+
+    // Verify token
+
+    jwt.verify(token, config.get('secretKey'), (error, decoded) => {
       if (error) {
-        return res.status(401).json({ msg: 'Token is not valid' });
+        return res.status(498).json({ msg: 'Token is not valid' });
       }
 
       req.user = decoded.user;
       next();
-
-      return res.json('123');
     });
   } catch (err) {
-    console.error('something wrong with auth middleware');
+    console.error('something wrong with auth middleware', err);
     res.status(500).json({ msg: 'Server Error' });
   }
-  return res.json('123');
 };

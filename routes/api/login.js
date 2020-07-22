@@ -26,18 +26,18 @@ router.post(
     try {
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).json({ errors: [{ msg: 'E-Mail not Registered' }] });
+        return res.status(400).json({ msg: 'E-Mail not Registered' });
       }
 
       const isMatch = await bcrypt.compare(password, user.password);
 
       if (!isMatch) {
-        return res.status(400).json({ errors: [{ msg: 'Wrong Password' }] });
+        return res.status(400).json({ msg: 'Wrong Password' });
       }
 
       const payload = {
         user: {
-          id: user.id,
+          id: user._id,
         },
       };
 

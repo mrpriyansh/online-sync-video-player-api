@@ -1,11 +1,15 @@
 const express = require('express');
 const socketio = require('socket.io');
 const http = require('http');
+const cors = require('cors');
 const connectDB = require('./config/db');
 
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+
+app.use(cors());
+app.use(express.json({ extended: false }));
 
 connectDB();
 
@@ -14,6 +18,7 @@ app.use(require('./controllers/socket')(io));
 app.use('/login', require('./routes/api/login'));
 app.use('/register', require('./routes/api/register'));
 app.use('/contact', require('./routes/api/contactus'));
+app.use('/userDetails', require('./routes/api/getUserDetails'));
 
 const PORT = process.env.port || 4000;
 app.get('/', (req, res) => res.send('Server Up and Running'));

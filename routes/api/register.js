@@ -18,7 +18,7 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    if (!errors.isEmpty()) return res.status(400).json({ msg: errors.array()[0].msg });
 
     const { name, email, password } = req.body;
     try {
@@ -37,7 +37,7 @@ router.post(
       await user.save();
       const payload = {
         user: {
-          id: user.id,
+          id: user._id,
         },
       };
 
@@ -46,7 +46,8 @@ router.post(
         res.json({ token });
       });
     } catch (err) {
-      return res.status(400).json({ msg: 'Server Error' });
+      console.log(err);
+      return res.status(500).json({ msg: 'Server Error' });
     }
   }
 );
