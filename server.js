@@ -1,6 +1,7 @@
 const express = require('express');
 const socketio = require('socket.io');
 const http = require('http');
+const cors = require('cors');
 const connectDB = require('./config/db');
 
 const { addUser, getUser, removeUser, getUsersInRoom } = require('./routes/api/users');
@@ -8,8 +9,10 @@ const { addUser, getUser, removeUser, getUsersInRoom } = require('./routes/api/u
 const app = express();
 const server = http.createServer(app);
 const io = socketio(server);
+app.use(cors());
 app.use(express.json({ extended: false }));
 connectDB();
+
 
 io.on('connection', socket => {
   // eslint-disable-next-line consistent-return
@@ -46,6 +49,7 @@ app.get('/', (req, res) => res.send('Server Up and Running'));
 app.use('/login', require('./routes/api/login'));
 app.use('/register', require('./routes/api/register'));
 app.use('/contact', require('./routes/api/contactus'));
+app.use('/userDetails', require('./routes/api/getUserDetails'));
 
 const PORT = process.env.port || 4000;
 app.listen(PORT, () => console.log(`Server is up on port ${PORT}`));
