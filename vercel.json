@@ -1,6 +1,6 @@
 {
     "builds": [{
-        "src": "index.js",
+        "src": "server.js",
         "use": "@now/node-server"
     }],
     
@@ -11,6 +11,6 @@
             "Access-Control-Allow-Headers": "X-Requested-With, Content-Type, Accept"
         },
         "src": "/.*",
-        "dest": "/index.js"
+        "dest": "/server.js"
     }]
 }
