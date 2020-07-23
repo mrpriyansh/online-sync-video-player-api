@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const config = require('config');
+const config = require('../config/config');
 
 // eslint-disable-next-line consistent-return
 module.exports = (req, res, next) => {
@@ -14,7 +14,8 @@ module.exports = (req, res, next) => {
 
     // Verify token
 
-    jwt.verify(token, config.get('secretKey'), (error, decoded) => {
+    // eslint-disable-next-line consistent-return
+    jwt.verify(token, config.secretKey, (error, decoded) => {
       if (error) {
         return res.status(498).json({ msg: 'Token is not valid' });
       }
