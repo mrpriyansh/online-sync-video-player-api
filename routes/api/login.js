@@ -4,7 +4,7 @@ const router = express.Router();
 const { check, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const config = require('config');
+const config = require('../../config/config');
 
 const User = require('../../models/User.js');
 // const auth = require('../../middleware/auth.js');
@@ -41,7 +41,7 @@ router.post(
         },
       };
 
-      return jwt.sign(payload, config.get('secretKey'), { expiresIn: '5 days' }, (err, token) => {
+      return jwt.sign(payload, config.secretKey, { expiresIn: '5 days' }, (err, token) => {
         if (err) throw err;
         res.json({ token });
       });
