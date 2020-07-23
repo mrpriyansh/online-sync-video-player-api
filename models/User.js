@@ -17,13 +17,11 @@ const User = new mongoose.Schema({
   socketId: {
     type: String,
     required: false,
-    unique: true,
   },
   room: {
     type: String,
     required: false,
-    unique: true,
   },
 });
 
-module.exports = mongoose.model('User', User);
+module.exports = mongoose.model('users', User);
