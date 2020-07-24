@@ -9,6 +9,7 @@ app.use(cors());
 
 const server = http.createServer(app);
 const io = socketio(server);
+io.origins('*:*');
 
 app.use(express.json({ extended: false }));
 
