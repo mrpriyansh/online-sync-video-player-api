@@ -5,10 +5,18 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 
 const app = express();
+app.use(cors());
+
 const server = http.createServer(app);
 const io = socketio(server);
 
-app.use(cors());
+io.origins((origin, callback) => {
+  // if (origin !== '') {
+  //   return callback('origin not allowed', false);
+  // }
+  callback(null, true);
+});
+
 app.use(express.json({ extended: false }));
 
 connectDB();
