@@ -5,11 +5,11 @@ const cors = require('cors');
 const connectDB = require('./config/db');
 
 const app = express();
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 
 const server = http.createServer(app);
 const io = socketio(server);
-io.set('origins', '*:*');
+// io.set('origins', '*:*');
 // io.origins('*:*') // for latest version
 
 app.use(express.json({ extended: false }));
