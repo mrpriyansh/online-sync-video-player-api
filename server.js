@@ -1,6 +1,6 @@
 const express = require('express');
 const socketio = require('socket.io');
-const http = require('https');
+const http = require('http');
 const cors = require('cors');
 const connectDB = require('./config/db');
 
