@@ -9,6 +9,8 @@ app.use(cors());
 
 const server = http.createServer(app);
 const io = socketio(server);
+io.set('origins', '*:*');
+// io.origins('*:*') // for latest version
 
 app.use(express.json({ extended: false }));
 
