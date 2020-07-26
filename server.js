@@ -13,7 +13,6 @@ app.use(express.json({ extended: false }));
 
 connectDB();
 
-app.use(express.json({ extended: false }));
 app.use(require('./controllers/socket')(io));
 app.use('/login', require('./routes/api/login'));
 app.use('/register', require('./routes/api/register'));
