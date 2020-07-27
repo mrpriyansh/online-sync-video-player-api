@@ -1,20 +1,26 @@
 const express = require('express');
 
-const app = express();
-const server = require('http').createServer(app);
-const io = require('socket.io')(server);
+const socketio = require('socket.io');
+const http = require('http');
+const cors = require('cors');
 const connectDB = require('./config/db');
 
+const app = express();
+const server = http.createServer(app);
+const io = socketio(server);
+
+app.use(cors());
 app.use(express.json({ extended: false }));
+
 connectDB();
 
-app.get('/', (req, res) => res.send('Server Up and Running'));
-app.use('/room', require('./routes/api/room'));
+app.use(require('./controllers/socket')(io));
 app.use('/login', require('./routes/api/login'));
 app.use('/register', require('./routes/api/register'));
 app.use('/contact', require('./routes/api/contactus'));
+app.use('/userDetails', require('./routes/api/getUserDetails'));
 
 const PORT = process.env.port || 4000;
-app.listen(PORT, () => console.log(`Server is up on port ${PORT}`));
 
-require('./routes/api/room')(app, io);
+app.get('/', (req, res) => res.send('Server Up and Running'));
+server.listen(PORT, () => console.log(`Server is up on port ${PORT}`));
