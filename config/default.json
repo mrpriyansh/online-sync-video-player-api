@@ -1,0 +1,3 @@
+{
+	"mongoURI" :"mongodb+srv://App1:AppAccess@dev-project.dvfuf.mongodb.net/Users?retryWrites=true&w=majority"
+}
