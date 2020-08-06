@@ -17,7 +17,9 @@ const addUser = async (socketId, userId, room) => {
 
 const getUser = async socketId => {
   try {
+    console.log(socketId);
     const user = await User.findOne({ socketId });
+    if (!user) return { user };
     return { user: { name: user.name, room: user.room } };
   } catch (err) {
     console.log(err);
@@ -25,10 +27,14 @@ const getUser = async socketId => {
   }
 };
 
-const removeUser = async socketId => {
+const removeUser = async userId => {
   try {
-    const user = await User.findOneAndUpdate({ socketId }, { $set: { socketId: '', room: '' } });
-    console.log('Remove: ', socketId);
+    const user = await User.findOneAndUpdate({ _id: userId }, { $set: { socketId: '', room: '' } });
+    if (!user) {
+      console.log('No user', userId, user);
+      return { user };
+    }
+    console.log('Remove: ', user.name);
     return { user: { name: user.name, room: user.room } };
   } catch (err) {
     console.log(err);
