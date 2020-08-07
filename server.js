@@ -20,7 +20,7 @@ app.use('/register', require('./routes/api/register'));
 app.use('/contact', require('./routes/api/contactus'));
 app.use('/userDetails', require('./routes/api/getUserDetails'));
 
-const PORT = process.env.port || 4000;
+const PORT = process.env.PORT || 4000;
 
 app.get('/', (req, res) => res.send('Server Up and Running'));
 server.listen(PORT, () => console.log(`Server is up on port ${PORT}`));
