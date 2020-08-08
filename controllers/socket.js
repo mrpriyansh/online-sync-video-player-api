@@ -48,17 +48,17 @@ module.exports = function(io) {
       return callback();
     });
 
-    socket.on('sendURL', async ({ URL }, callback) => {
+    socket.on('sendURL', async (URL, callback) => {
       const { user } = await getUser(socket.id);
       if (!user.room) return callback({ error: true, msg: 'no user found' });
       io.in(user.room).emit('getURL', { URL });
       return callback();
     });
-      
+
     socket.on('setPlayPause', async (isPlaying, time, callback) => {
       const { user } = await getUser(socket.id);
       if (!user.room) return callback({ error: true, msg: 'room not found' });
-      io.broadcast.to(user.room).emit('getPlayPause', { isPlaying, time });
+      io.in(user.room).emit('getPlayPause', { isPlaying, time });
       return callback();
     });
   });
