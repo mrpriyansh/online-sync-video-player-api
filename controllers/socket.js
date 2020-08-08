@@ -41,10 +41,17 @@ module.exports = function(io) {
     socket.on('setSeek', async ({ seekTime, type }, callback) => {
       const { user } = await getUser(socket.id);
       if (!user.room) return callback({ error: true, msg: 'no user found' });
-      io.broadcast.to(user.room).emit('getSeek', {
-        Time: seekTime,
+      socket.broadcast.to(user.room).emit('getSeek', {
+        time: seekTime,
         seekType: type,
       });
+      return callback();
+    });
+
+    socket.on('sendURL', async ({ URL }, callback) => {
+      const { user } = await getUser(socket.id);
+      if (!user.room) return callback({ error: true, msg: 'no user found' });
+      socket.broadcast.to(user.room).emit('getURL', { URL });
       return callback();
     });
   });
