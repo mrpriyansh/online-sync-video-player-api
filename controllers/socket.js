@@ -54,7 +54,13 @@ module.exports = function(io) {
       io.in(user.room).emit('getURL', { URL });
       return callback();
     });
+      
+    socket.on('setPlayPause', async (isPlaying, time, callback) => {
+      const { user } = await getUser(socket.id);
+      if (!user.room) return callback({ error: true, msg: 'room not found' });
+      io.broadcast.to(user.room).emit('getPlayPause', { isPlaying, time });
+      return callback();
+    });
   });
-
   return router;
 };
