@@ -41,11 +41,10 @@ router.post(
         },
       };
 
-      jwt.sign(payload, config.get('secretKey'), { expiresIn: '5 days' }, (err, token) => {
+      return jwt.sign(payload, config.get('secretKey'), { expiresIn: '5 days' }, (err, token) => {
         if (err) throw err;
         res.json({ token });
       });
-      return res.status(500).send('Unexpected error happened');
     } catch (err) {
       return res.status(500).send('Server error');
     }

@@ -41,13 +41,12 @@ router.post(
         },
       };
 
-      jwt.sign(payload, config.get('secretKey'), { expiresIn: '5 days' }, (err, token) => {
+      return jwt.sign(payload, config.get('secretKey'), { expiresIn: '5 days' }, (err, token) => {
         if (err) throw err;
-        return res.json({ token });
+        res.json({ token });
       });
-      return res.json('Unexpected error happened');
     } catch (err) {
-      return res.status(400).json({ msg: 'User already exists' });
+      return res.status(400).json({ msg: 'Server Error' });
     }
   }
 );
