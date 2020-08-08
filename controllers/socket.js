@@ -38,10 +38,10 @@ module.exports = function(io) {
 
     // *********** playerFunctions *************
 
-    socket.on('setSeek', async ({ seekTime, type }, callback) => {
+    socket.on('setSeekTime', async ({ seekTime, type }, callback) => {
       const { user } = await getUser(socket.id);
       if (!user.room) return callback({ error: true, msg: 'no user found' });
-      io.broadcast.to(user.room).emit('getSeek', {
+      io.broadcast.to(user.room).emit('seekTo', {
         Time: seekTime,
         seekType: type,
       });
