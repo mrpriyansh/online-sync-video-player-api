@@ -20,7 +20,7 @@ module.exports = function(io) {
     socket.on('sendMessage', async (message, callback) => {
       const { user } = await getUser(socket.id);
       // handle undefined user... **HAVE TO RESOLVE**
-      if (!user) return callback({ error: true, msg: 'no user find' });
+      if (!user) return callback({ error: true, msg: 'no user found' });
       console.log(`${user.name} sends ${message}`);
       io.to(user.room).emit('message', { user: user.name, text: message });
       return callback();
@@ -36,6 +36,25 @@ module.exports = function(io) {
       }
     });
 
+    // *********** playerFunctions *************
+
+    socket.on('setSeek', async ({ seekTime, type }, callback) => {
+      const { user } = await getUser(socket.id);
+      if (!user.room) return callback({ error: true, msg: 'no user found' });
+      io.in(user.room).emit('getSeek', {
+        time: seekTime,
+        seekType: type,
+      });
+      return callback();
+    });
+
+    socket.on('sendURL', async ({ URL }, callback) => {
+      const { user } = await getUser(socket.id);
+      if (!user.room) return callback({ error: true, msg: 'no user found' });
+      io.in(user.room).emit('getURL', { URL });
+      return callback();
+    });
+      
     socket.on('setPlayPause', async (isPlaying, time, callback) => {
       const { user } = await getUser(socket.id);
       if (!user.room) return callback({ error: true, msg: 'room not found' });
