@@ -35,6 +35,13 @@ module.exports = function(io) {
         // io.to(user.room).emit('roomData', { room: user.room, users: getUsersInRoom(user.room) });
       }
     });
+
+    socket.on('setPlayPause', async (isPlaying, time, callback) => {
+      const { user } = await getUser(socket.id);
+      if (!user.room) return callback({ error: true, msg: 'room not found' });
+      io.broadcast.to(user.room).emit('getPlayPause', { isPlaying, time });
+      return callback();
+    });
   });
   return router;
 };
