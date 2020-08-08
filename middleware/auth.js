@@ -5,7 +5,6 @@ const config = require('../config/config');
 module.exports = (req, res, next) => {
   try {
     // Get token from header
-    console.log(req.headers.authorization.split(' ').length);
     if (!req.headers.authorization || req.headers.authorization.split(' ').length <= 1)
       return res.status(417).json({ msg: 'No token, authorization denied' });
 
