@@ -1,8 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const config = require('config');
 const { check, validationResult } = require('express-validator');
+const config = require('../../config/config');
 
 const router = express.Router();
 const User = require('../../models/User');
@@ -18,7 +18,7 @@ router.post(
   ],
   async (req, res) => {
     const errors = validationResult(req);
-    if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+    if (!errors.isEmpty()) return res.status(400).json({ msg: errors.array()[0].msg });
 
     const { name, email, password } = req.body;
     try {
@@ -29,6 +29,8 @@ router.post(
         name,
         email,
         password,
+        socketId: '',
+        room: '',
       });
 
       const salt = await bcrypt.genSalt(10);
@@ -37,16 +39,17 @@ router.post(
       await user.save();
       const payload = {
         user: {
-          id: user.id,
+          id: user._id,
         },
       };
 
-      return jwt.sign(payload, config.get('secretKey'), { expiresIn: '5 days' }, (err, token) => {
+      return jwt.sign(payload, config.secretKey, { expiresIn: '5 days' }, (err, token) => {
         if (err) throw err;
         res.json({ token });
       });
     } catch (err) {
-      return res.status(400).json({ msg: 'Server Error' });
+      console.log(err);
+      return res.status(500).json({ msg: 'Server Error' });
     }
   }
 );
