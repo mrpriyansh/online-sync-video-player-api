@@ -58,7 +58,7 @@ module.exports = function(io) {
     socket.on('setPlayPause', async (isPlaying, time, callback) => {
       const { user } = await getUser(socket.id);
       if (!user.room) return callback({ error: true, msg: 'room not found' });
-      io.in(user.room).emit('getPlayPause', { isPlaying, time });
+      socket.to(user.room).emit('getPlayPause', { isPlaying, time });
       return callback();
     });
   });
