@@ -20,7 +20,7 @@ module.exports = function(io) {
       // eslint-disable-next-line no-restricted-syntax
       for (const client in users) {
         if (client !== socket.id) {
-          io.to(client).emit('sendAllInfo');
+          io.to(client).emit('sharePlayerInfo');
           return callback();
         }
       }
@@ -69,6 +69,15 @@ module.exports = function(io) {
       const { user } = await getUser(socket.id);
       if (!user || !user.room) return callback({ error: true, msg: 'room not found' });
       io.in(user.room).emit('getPlayPause', { isPlaying, time });
+      return callback();
+    });
+
+    socket.on('sendPlayerInfo', async (playerInfo, callback) => {
+      console.log(playerInfo);
+
+      const { user } = await getUser(socket.id);
+      if (!user || !user.room) return callback({ error: true, msg: 'no user found' });
+      io.in(user.room).emit('getPlayerInfo', playerInfo);
       return callback();
     });
 
