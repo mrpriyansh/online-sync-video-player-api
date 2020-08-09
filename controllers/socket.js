@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 const express = require('express');
 
 const router = express.Router();
@@ -14,6 +15,15 @@ module.exports = function(io) {
       socket.broadcast
         .to(user.room)
         .emit('message', { user: 'admin', text: `${user.name} joined the chat` });
+
+      const users = io.sockets.adapter.rooms[room].sockets;
+      // eslint-disable-next-line no-restricted-syntax
+      for (const client in users) {
+        if (client !== socket.id) {
+          io.to(client).emit('sendAllInfo');
+          return callback();
+        }
+      }
       return callback();
     });
 
@@ -61,6 +71,26 @@ module.exports = function(io) {
       io.in(user.room).emit('getPlayPause', { isPlaying, time });
       return callback();
     });
+
+    // socket.on('getAllInfo', async room => {
+    //   // const users = io.sockets.clients(room);
+    //   const users = io.sockets.adapter.rooms[room].sockets;
+    //   console.log(room);
+    //   const { user } = await getUser(socket.id);
+    //   console.log(user);
+    //   const socketId = socket.id;
+    //   console.log('aadsafsda', socketId);
+    //   // eslint-disable-next-line no-restricted-syntax
+    //   for (const client in users) {
+    //     if (client !== socketId) {
+    //       console.log('a', client, socketId);
+    //       io.to(client).emit('sendAllInfo', { socketId });
+    //       return;
+    //     }
+    //     // console.log(client, socket.id);
+    //   }
+    //   return;
+    // });
   });
   return router;
 };
