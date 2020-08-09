@@ -41,7 +41,7 @@ module.exports = function(io) {
     socket.on('setSeek', async ({ seekTime, type }, callback) => {
       const { user } = await getUser(socket.id);
       if (!user.room) return callback({ error: true, msg: 'no user found' });
-      io.in(user.room).emit('getSeek', {
+      socket.to(user.room).emit('getSeek', {
         time: seekTime,
         seekType: type,
       });
