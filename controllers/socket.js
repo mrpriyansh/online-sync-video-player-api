@@ -1,3 +1,4 @@
+/* eslint-disable guard-for-in */
 const express = require('express');
 
 const router = express.Router();
@@ -14,6 +15,15 @@ module.exports = function(io) {
       socket.broadcast
         .to(user.room)
         .emit('message', { user: 'admin', text: `${user.name} joined the chat` });
+
+      const users = io.sockets.adapter.rooms[room].sockets;
+      // eslint-disable-next-line no-restricted-syntax
+      for (const client in users) {
+        if (client !== socket.id) {
+          io.to(client).emit('sharePlayerInfo');
+          return callback();
+        }
+      }
       return callback();
     });
 
@@ -57,10 +67,39 @@ module.exports = function(io) {
 
     socket.on('setPlayPause', async (isPlaying, time, callback) => {
       const { user } = await getUser(socket.id);
-      if (!user.room) return callback({ error: true, msg: 'room not found' });
-      socket.to(user.room).emit('getPlayPause', { isPlaying, time });
+      if (!user || !user.room) return callback({ error: true, msg: 'room not found' });
+      io.in(user.room).emit('getPlayPause', { isPlaying, time });
       return callback();
     });
+
+    socket.on('sendPlayerInfo', async (playerInfo, callback) => {
+      console.log(playerInfo);
+
+      const { user } = await getUser(socket.id);
+      if (!user || !user.room) return callback({ error: true, msg: 'no user found' });
+      io.in(user.room).emit('getPlayerInfo', playerInfo);
+      return callback();
+    });
+
+    // socket.on('getAllInfo', async room => {
+    //   // const users = io.sockets.clients(room);
+    //   const users = io.sockets.adapter.rooms[room].sockets;
+    //   console.log(room);
+    //   const { user } = await getUser(socket.id);
+    //   console.log(user);
+    //   const socketId = socket.id;
+    //   console.log('aadsafsda', socketId);
+    //   // eslint-disable-next-line no-restricted-syntax
+    //   for (const client in users) {
+    //     if (client !== socketId) {
+    //       console.log('a', client, socketId);
+    //       io.to(client).emit('sendAllInfo', { socketId });
+    //       return;
+    //     }
+    //     // console.log(client, socket.id);
+    //   }
+    //   return;
+    // });
   });
   return router;
 };

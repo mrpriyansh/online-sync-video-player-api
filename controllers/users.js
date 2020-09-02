@@ -17,7 +17,6 @@ const addUser = async (socketId, userId, room) => {
 
 const getUser = async socketId => {
   try {
-    console.log(socketId);
     const user = await User.findOne({ socketId });
     if (!user) return { user };
     return { user: { name: user.name, room: user.room } };
